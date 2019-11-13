@@ -1,5 +1,6 @@
 ## Step 1
 library(CVXR)
+library(plyr)
 data = read.csv("hw7.csv", header = TRUE)
 data = data[, -1]
 ## Step 2
@@ -14,7 +15,10 @@ result = solve(problem)
 result$getValue(theta_lasso)
 fitted_theta = result$getValue(theta_lasso)
 
-# Step 4
+## Step 3
+
+
+## Step 4
 I = split(data, sample(rep(1:10, 5)))
 cross_validation = function(subset){
   S = cov(subset)
@@ -43,9 +47,10 @@ neg_log_lik = function(subset){
   fitted_theta = result$getValue(theta_lasso)
   return(fitted_theta)
 }
-fittedNegLogLik = lapply(I, neg_log_lik)
-overallNegLogLik = lapply(fittedNegLogLik, sum) ## This is wrong. 
-                    ## How to sum each element of the matricies?
+fittedNegLogLik = laply(I, neg_log_lik)
+overallNegLogLik = aaply(fittedNegLogLik, c(1,2), sum) 
+
+plot(overallNegLogLik, fitted_theta)
 
 
 
